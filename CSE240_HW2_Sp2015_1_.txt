@@ -1,0 +1,177 @@
+﻿CSE 240 Homework 2, Spring 2015 (50 points)
+Due Saturday, January 31, 2015 at 11:59PM, plus a 24-Hour grace period 
+
+
+Introduction
+The aim of this assignment is to make sure that you understand and are familiar with the concepts covered in the lectures, including programming paradigms, the structure of programming languages, and the differences between a macro and a procedure.  By the end of the assignment, you should have
+exercised typing systems and operations of different typing systems.
+understood differences between the execution models of a macro and a function.
+gotten started with the programming environments Visual Studio and GCC.
+
+This assignment is related to the outcomes 1-2 and 1-3 listed in the syllabus:
+learn strong vs. weak typing in computer programming languages 
+understand the control structures of functional, logic, and imperative programming languages.
+understand the execution of functional, logic, and imperative programming languages.
+Reading: Read chapter 1, chapter 2 (sections 2.1, 2.2, and 2.3), appendix (sections B.1 and B.2), and course notes (slides).
+You are expected to do the majority of the assignment outside the class meetings. Should you need assistance, or have questions about the assignment, please contact the instructor or the TA during their office hours.   
+You are encouraged to ask and answer questions on the course discussion board.  (However, do not share your answers in the course discussion board.)
+
+
+Pre-requisite 
+
+See Homework 1
+
+
+Programming Exercise (50 points)
+
+1. In this assignment, you will learn typing system and operations applied on different data types. You will also learn timing the execution of a program.	[20 points]
+1.1 	Read and analyze the following C program.	[5]
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>  // include srand function
+#pragma warning(disable : 4996) 
+#define Size 15
+main() {
+	int a[Size];
+	int i;
+	double b1[Size], b2[Size];
+	srand( (unsigned)time( NULL ) );  // Use current time as seed
+	// apply (start) timestamp 
+       for (i = 0; i < Size; i++)
+	{
+		a[i] = rand() % 100; 
+              // initialize the array using random number between 0 and 99
+		b1[i] = a[i]/5;
+		printf("a[%d] = %d\n", i, a[i]);
+		printf("b1[%d] = %f\n", i, b1[i]);
+		b2[i] = a[i];
+		b2[i] = b2[i]/5;
+		printf("b2[%d] = %f\n", i, b2[i]);
+	}
+	// apply (end) timestamp 
+	//compute the time elapsed and display time in seconds
+}
+Should the arrays b1 and b2 have the same values after the execution (being printed)? Execute the program in GCC or in Visual Studio. Explain why arrays b1 and b2 have different or the same values. Submit the output of the program and your explanations.
+If you’re running this program in GCC, you may receive the following warning: 
+
+warning: ignoring #pragma warning  [-Wunknown-pragmas] #pragma warning(disable : 4996)
+	Please disregard this message and continue to execute your program, as this segment of code pertains to Visual Studio.
+
+
+1.2	Given the following C code, try to understand what it does and how the delay is introduced.	[10]
+#include <stdio.h>
+#include <time.h>
+#pragma warning(disable : 4996) 
+
+void sleep2(int wait) {
+	time_t goal, current;
+	time(&goal);
+	goal += wait;
+	do
+	{
+		time(&current);
+	}
+	while (goal > current);
+}
+
+main() {
+	int delay;
+	printf("Enter an integer ...\n");
+	scanf("%d", &delay);
+	printf("To be delayed for %d seconds ...\n", delay);
+	sleep2(delay);
+	printf("expired\n");
+}
+Explain how the delay is introduced. Submit your answer.
+
+1.3 	Apply the delay method you learned in question 1.2 to measure the execution time of the program in question 1.1 by adding the code for the start timestamp and end timestamp and calculating the time elapsed between the start and end timestamps. You may need to use a larger array Size to see the time difference. Submit the program and the output of the program.	[5]
+
+2. Read text section 1.4.2. Macros are available in most high-level programming languages. The body of a macro is simply used to replace a macro-call during the preprocessing stage. A macro introduces a "true inline" function that is normally more efficient than an "out-line" function. However, macros suffer from the side-effect, unwanted, or unexpected modifications to variables. Macros should be used cautiously. The main purpose of the following program is to demonstrate the differences between a function and a macro. Other purposes include demonstrating the differences between different programming environments, and learning different ways of writing comments, formatted input and output, variable declaration and initialization, unary operation ++, macro definition/call, function definition/call, if-then-else and loop structures, etc. Study the given program and answer the following questions.	[30 points]
+
+/* Side effect, Macro versus Function */
+
+#include <stdio.h>
+#pragma warning(disable : 4996) 
+#define mac(a,b) a*a + b*b - 2*a*b
+
+int func(int a, int b) {  				
+	return (a*a + b*b - 2*a*b);
+}
+
+main() {
+	int f, g, i, j, x, y;
+	printf("Please enter two integers\n");
+	scanf("%d%d", &f, &g);
+	printf("f = %d\tg = %d\n", f, g);
+	i = f;
+	j = g;
+	x = func(i, j);
+	y = mac(i, j);
+	printf("x = %d\ty = %d\n", x, y);
+	x = func(++i, ++j);
+	i = f;
+	j = g;
+	y = mac(++i, ++j);
+	printf("i = %d\tj = %d\n", i, j);
+	printf("x = %d\ty = %d\n", x, y);
+}
+
+2.1   Manually trace through the code again. What is the expected output, if f = 7 and g = 8?  Please submit your result in text document.  You will not lose points even if your answers are incorrect.  	[4]
+		
+f = 7         g = 8
+x = ?         y = ?
+i = ?         j = ?
+x = ?         y = ?
+	
+2.2	Create a new project in Visual Studio 2013 environment. Enter the program, compile and execute the program. Submit your output in the same text document.	[4]
+
+2.3	Execute the same the program using in the GCC programming environment and using the same inputs. What are the outputs of the program?  You only need to submit the output.  Please attach solution to the same text document. If you are not familiar with Unix and GCC, read text B.2.1. 	[4]
+
+2.4	In the pre-processing phase, all macro calls will be replaced by the body part in the macro definition. Give the exact C code of the macro call "y = mac(i, j);" after the macro processing. Please submit your output in the same text document. 	[5]
+
+2.5	Give the exact C code of the macro call "y = mac(++i, ++j);" after the macro processing. Please submit your output in the same text document.	[5]
+
+2.6	Explain why the output values of x and y can be different when the program is executed on an environment such as GCC. Your answer should be based on the analysis to question 2.4. Please submit your explanation in the same text document.	[4]
+ 	
+2.7	Explain why Visual Studio and GCC programming environments could possibly produce a different y value for the same program and for the same input.  (Hint: Explain how each environment will calculate the y value.) Please submit your explanation in the same text document. 	[4]
+
+
+Grading of Programming Assignment
+	
+The TA will grade your program following these steps:
+
+(1) The TA will read your program and give points based on the points allocated to each component, the readability of your code (organization of the code and comments), logic, inclusion of the required functions, and correctness of the implementations of each function.
+
+(2) Compile the code. If it does not compile, 20% of the points given in (1) will be deducted. For example, if you are given 20 points in step (1), your points will become 16 if the program fails to compile.
+
+(3) If the code passes the compilation, the TA will execute and test the code. If, for any reason, the program gives an incorrect output or crashes for any input, 10% of the points given in (1) will be deducted.
+
+What to Submit?
+
+This homework assignment will have multiple parts.  You are required to submit your solutions in a compressed format (.zip).  Make sure your compressed file is label correctly - lastname_firstname1.zip.   (All lowercase, do not put anything else in the name like "hw2".)
+
+The compressed file MUST contain the following:
+
+hw2q1-1.txt Submit the output of the program and your explanations.
+hw2q1-2.txt Submit your answer.
+hw2q1-3.c (program)
+hw2q1-3.txt Submit the output of the program
+hw2q2.txt (Please label each parts)
+
+No other files should be in the compressed folder.  A .txt file is a plain text file, which is produced by tools like Notepad.  Microsoft Word does not save plain text by default.
+ 
+If multiple submissions are made, the most recent submission will be graded.  (Even if the assignment is submitted late.)
+
+Where to Submit?
+
+All submissions must be electronically submitted to the respected homework link in the course web page where you downloaded the assignment. 
+
+Late submission deduction policy
+
+No penalty for late submissions that are received within 24 hours after the deadline;
+10% grade deduction for every day it is late after the grace period;
+No late submission after Tuesday at 11:59PM.
+  
+
+
+
